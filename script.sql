@@ -30,4 +30,15 @@ INSERT INTO activites(nom , description)
 VALUES ('yoga' , 'A yoga practice is a lifelong pursuit, giving you plenty of time to explore each asana (pose) and learn sequences of postures') , ('cardio' , 'Le cardio-training est une activité sportive qui sollicite le système cardio-vasculaire');
 
 
-SELECT * FROM membres a INNER JOIN reservations b ON  a.membre_id  = b.activite_id;
+SELECT * 
+FROM membres a 
+INNER JOIN reservations b ON a.membre_id = b.membre_id
+INNER JOIN activites c ON b.activite_id = c.activite_id;
+
+
+UPDATE reservations
+SET date_reservation = '2024-12-15'
+WHERE id_reservations = 1;
+
+
+DELETE FROM membres WHERE membre_id = 1;
