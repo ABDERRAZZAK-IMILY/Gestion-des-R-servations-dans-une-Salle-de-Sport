@@ -2,27 +2,36 @@
 include "db_connect.php";
 
  $activities = [];
- $activityQuery = "SELECT activite_id, nom FROM activites";
- $activityResult = $conn->query($activityQuery);
- if ($activityResult && $activityResult->num_rows > 0) {
-     while ($row = $activityResult->fetch_assoc()) {
-         $activities[] = $row;
+ $aq = "SELECT activite_id, nom FROM activites";
+ $ar = $conn->query($aq);
+ if ($ar && $ar->num_rows > 0) {
+     while ($ro = $ar->fetch_assoc()) {
+         $activities[] = $ro;
      }
  }
-
-
 
 if (isset($_POST['submit'])) {
     $nome = $_POST['nome'];
     $prenome = $_POST['prenome'];
     $email = $_POST['email'];
     $activity = $_POST['activity'];
-
+    
+    $date_res = date('Y-m-d');
     $stmt = $conn->prepare("INSERT INTO membres (nom, prenom, email) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $nome, $prenome, $email);
 
     if ($stmt->execute()) {
         echo 'Data inserted successfully';
+        $membre_id = $conn->insert_id;
+        $stmt2 = $conn->prepare("INSERT INTO reservations (membre_id, activite_id, date_reservation) VALUES (?, ?, ?)");
+        $stmt2->bind_param("iis", $membre_id, $activity, $date_res);
+        
+        if ($stmt2->execute()) {
+            echo 'secsuuuce';
+        } else {
+            echo "errore : " . $stmt2->error;
+        }
+        
     } else {
         echo "Error: " . $stmt->error;
     }
