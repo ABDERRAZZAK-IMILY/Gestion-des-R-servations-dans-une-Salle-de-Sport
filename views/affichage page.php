@@ -12,6 +12,7 @@ include('/xampp/htdocs/brief/Gestion-des-R-servations-dans-une-Salle-de-Sport/vi
 
 $sq = "SELECT * FROM membres";
 
+
 $rm = mysqli_query($conn, $sq);
 ?>
 
