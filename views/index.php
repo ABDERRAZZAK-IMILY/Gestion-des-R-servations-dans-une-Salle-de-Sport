@@ -1,3 +1,36 @@
+<?php
+include "db_connect.php";
+
+ $activities = [];
+ $activityQuery = "SELECT activite_id, nom FROM activites";
+ $activityResult = $conn->query($activityQuery);
+ if ($activityResult && $activityResult->num_rows > 0) {
+     while ($row = $activityResult->fetch_assoc()) {
+         $activities[] = $row;
+     }
+ }
+
+
+
+if (isset($_POST['submit'])) {
+    $nome = $_POST['nome'];
+    $prenome = $_POST['prenome'];
+    $email = $_POST['email'];
+    $activity = $_POST['activity'];
+
+    $stmt = $conn->prepare("INSERT INTO membres (nom, prenom, email) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $nome, $prenome, $email);
+
+    if ($stmt->execute()) {
+        echo 'Data inserted successfully';
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,7 +64,10 @@
     </div>
     <div>
     <select name="activity" class="form-group" >
-               
+                <option value="" disabled selected>Select an Activity</option>
+                <?php foreach ($activities as $activity): ?>
+                    <option value="<?= $activity['activite_id'] ?>"><?= $activity['nom'] ?></option>
+                <?php endforeach; ?>
             </select>
     </div>
    
